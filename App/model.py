@@ -28,6 +28,7 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as mt
@@ -49,12 +50,18 @@ def newCatalog(tipo):
     """
     catalog = {'videos': None,
                'category': None,
-               "tranding": None
+               "videostags": None
                }
-
     catalog['videos'] = lt.newList(tipo)
-    catalog['category'] = lt.newList(tipo,
-                                     cmpfunction=comparcategory)
+    catalog['videostags'] = mp.newMap(200,
+                                maptype='CHAINING',
+                                loadfactor=4.0)
+
+    
+    catalog['category'] = mp.newMap(70,
+                                   maptype='PROBING',
+                                   loadfactor=0.5,
+                                   comparefunction=comparcategory)
     
 
     return catalog
@@ -72,6 +79,7 @@ def newcategory(id, name):
 def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
     lt.addLast(catalog['videos'], video)
+    mp.put(catalog['videostags'], video['category_id'], video)
     # Se obtiene el autor del video
 
 
@@ -84,11 +92,17 @@ def addid(catalog, category):
 
     category["id"] = lista[0]
     category["name"] = lista[1].strip()
-    t = newcategory(category["id"], category['name'])
-    lt.addLast(catalog['category'], t)
+    
+    mp.put(catalog['category'], category["name"], category["id"])
 
 
 # Funciones para agregar informacion al catalogo
+def getvideosbytag(catalog, tag):
+    tag = mp.get(catalog['category'], tag)
+    print(catalog["videostags"])
+    videos = mp.get(catalog['videostags'],(tag))
+    return videos
+    
 
 # Funciones para creacion de datos
 
@@ -108,5 +122,7 @@ def cmpVideosByViews(video1, video2):
 
 
 def comparcategory(categ, id):
+    id = me.getKey(id)
+    print(id)
+    return (categ == id)
 
-    return (categ == id["name"])

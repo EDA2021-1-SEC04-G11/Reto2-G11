@@ -68,7 +68,14 @@ while True:
 
 
     elif int(inputs[0]) == 2:
-        pass
+        print("los n videos con más LIKES para el nombre de una categoría específica")
+        tag = input("Etiqueta a buscar: ")
+        result = controller.getvideosbytag(catalog, tag)
+        
+        print(result[0])
+        
+       
+        
 
     else:
         sys.exit(0)
