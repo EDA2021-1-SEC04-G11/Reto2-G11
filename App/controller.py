@@ -55,7 +55,7 @@ def loadVideo(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-small.csv'
+    videosfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog, videos)
@@ -68,12 +68,12 @@ def loadvideocategory(catalog):
     for id in input_file:
         model.addid(catalog, id)
 
-def getvideosbytag(catalog, tag):
+def getvideosbytag(catalog, tag, size):
     """
     Retorna los videos que han sido marcados con
     una etiqueta
     """
-    return model.getvideosbytag(catalog, tag)
+    return model.getvideosbytag(catalog, tag, size)
    
 
 # Funciones para la carga de datos

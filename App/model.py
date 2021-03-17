@@ -60,8 +60,7 @@ def newCatalog(tipo):
     
     catalog['category'] = mp.newMap(70,
                                    maptype='PROBING',
-                                   loadfactor=0.5,
-                                   comparefunction=comparcategory)
+                                   loadfactor=0.5)
     
 
     return catalog
@@ -79,7 +78,14 @@ def newcategory(id, name):
 def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
     lt.addLast(catalog['videos'], video)
-    mp.put(catalog['videostags'], video['category_id'], video)
+    moj= mp.contains(catalog["videostags"],video['category_id']) 
+    if moj :
+        valoactual=mp.get(catalog["videostags"],video["category_id"])
+        valor= me.getValue(valoactual)
+    else:
+        valor=lt.newList("ARRAY_LIST")
+        mp.put(catalog['videostags'], video['category_id'], valor)
+    lt.addLast(valor,video)
     # Se obtiene el autor del video
 
 
@@ -97,11 +103,18 @@ def addid(catalog, category):
 
 
 # Funciones para agregar informacion al catalogo
-def getvideosbytag(catalog, tag):
-    tag = mp.get(catalog['category'], tag)
-    print(catalog["videostags"])
-    videos = mp.get(catalog['videostags'],(tag))
+def getvideosbytag(catalog, tag, size):
+    tagg=mp.get(catalog["category"],tag)
+    taggg=me.getValue(tagg)
+   
+    valor=mp.get(catalog["videostags"],taggg)
+    tema=me.getValue(valor)
+    videos = mt.sort(tema, cmpVideosByLikes)
+    videos = lt.subList(videos,1,size)
     return videos
+
+   
+   
     
 
 # Funciones para creacion de datos
@@ -125,4 +138,6 @@ def comparcategory(categ, id):
     id = me.getKey(id)
     print(id)
     return (categ == id)
+
+
 

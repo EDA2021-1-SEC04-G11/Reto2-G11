@@ -70,9 +70,10 @@ while True:
     elif int(inputs[0]) == 2:
         print("los n videos con más LIKES para el nombre de una categoría específica")
         tag = input("Etiqueta a buscar: ")
-        result = controller.getvideosbytag(catalog, tag)
-        
-        print(result[0])
+        size = int(input("Nuemro de videos: "))
+        result = controller.getvideosbytag(catalog, tag, size)
+        for x in lt.iterator(result):
+            print( x["title"], str("Likes : "), x["likes"], str("Categoria: "), x["category_id"])
         
        
         
