@@ -36,8 +36,8 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- los n videos con más LIKES para el nombre de una categoría específica ")
+    print("1- Cargar información en el catálogo ")
+    print("2- los n videos con más LIKES para el nombre de una categoría específica  ")
 
 def initCatalog(tipo):
     """
