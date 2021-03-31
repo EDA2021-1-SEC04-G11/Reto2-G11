@@ -24,7 +24,6 @@
  * Dario Correal - Version inicial
  """
 
-
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -41,7 +40,7 @@ los mismos.
 
 # Construccion de modelos
 
-def newCatalog(tipo):
+def newCatalog(tipo,alpha,maptyp):
     """
     Inicializa el catálogo de videos. Crea una lista vacia para guardar
     todos los videos, adicionalmente, crea una lista vacia para los autores,
@@ -50,20 +49,29 @@ def newCatalog(tipo):
     """
     catalog = {'videos': None,
                'category': None,
-               "videostags": None
+               "videostags": None,
+               "country":None
                }
     catalog['videos'] = lt.newList(tipo)
     catalog['videostags'] = mp.newMap(200,
-                                maptype='CHAINING',
-                                loadfactor=4.0)
+                                maptype=maptyp,
+                                loadfactor=alpha)
 
     
     catalog['category'] = mp.newMap(70,
                                    maptype='PROBING',
                                    loadfactor=0.5)
+    catalog['country'] = mp.newMap(70,
+                                   maptype='PROBING',
+                                   loadfactor=0.5)
+
     
 
     return catalog
+
+# ==============================
+# Funciones para crear datos
+# ==============================
 
 def newcategory(id, name):
     """
@@ -74,6 +82,10 @@ def newcategory(id, name):
     tag['tag_id'] = id
     return tag
 
+
+# ==============================
+# Funciones para agregar informacion al catalogo
+# ==============================
 
 def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
@@ -86,8 +98,8 @@ def addVideo(catalog, video):
         valor=lt.newList("ARRAY_LIST")
         mp.put(catalog['videostags'], video['category_id'], valor)
     lt.addLast(valor,video)
-    # Se obtiene el autor del video
 
+    # Se obtiene el autor del video
 
 def addid(catalog, category):
     """
@@ -101,27 +113,41 @@ def addid(catalog, category):
     
     mp.put(catalog['category'], category["name"], category["id"])
 
-
-# Funciones para agregar informacion al catalogo
-def getvideosbytag(catalog, tag, size):
-    tagg=mp.get(catalog["category"],tag)
-    taggg=me.getValue(tagg)
-   
-    valor=mp.get(catalog["videostags"],taggg)
-    tema=me.getValue(valor)
-    videos = mt.sort(tema, cmpVideosByLikes)
-    videos = lt.subList(videos,1,size)
-    return videos
-
-   
-   
-    
-
-# Funciones para creacion de datos
-
+# ==============================
 # Funciones de consulta
+# ==============================
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+def getvideosbytag(catalog, tag, size, pais):
+
+    videospais = lt.newList()
+    tagg=mp.get(catalog["category"],tag) 
+    taggg=me.getValue(tagg) 
+    valor=mp.get(catalog["videostags"],taggg) 
+
+    tema=me.getValue(valor) 
+    videos = mt.sort(tema, cmpVideosByLikes)
+    for cont in range(1,  lt.size(videos)):
+        video = lt.getElement(videos, cont)
+
+        if video["country"] == pais:
+            lt.addLast(videospais,video)
+    videos = lt.subList(videospais,1,size)
+    return videos
+    
+# Funciones de Tamaño
+
+def videosSize(catalog):
+    """
+    Número de libros en el catago
+    """
+    return lt.size(catalog['videos'])
+
+def categorySize(catalog):
+    """
+    Número de libros en el catago
+    """
+    return mp.size(catalog['category'])
+
 
 # Funciones de ordenamiento
 
@@ -138,6 +164,7 @@ def comparcategory(categ, id):
     id = me.getKey(id)
     print(id)
     return (categ == id)
+
 
 
 

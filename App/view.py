@@ -33,17 +33,28 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
+# ===================================
+# Menu de opciones
+# ===================================
 
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo ")
-    print("2- los n videos con más LIKES para el nombre de una categoría específica  ")
+    print("2- Req 1: Los n videos con más LIKES para el nombre de una categoría y país específico ")
+    print('3- Req 2: Video que más días ha sido trending para un país específico')
+    print('4- Req 3: Video que más días ha sido trending para una categoría específica. ')
+    print('5- Req 4: Los n videos diferentes con más likes dado un país y un tag específico ')
+    print("0- Salir")
 
-def initCatalog(tipo):
+# ===================================
+# Funciones de inicializacion
+# ===================================
+
+def initCatalog(tipo,alpha,maptyp):
     """
     Inicializa el catalogo de videos
     """
-    return controller.initCatalog(tipo)
+    return controller.initCatalog(tipo,alpha,maptyp)
 
 
 def loadData(catalog):
@@ -61,22 +72,41 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        type_map = int(input('Ingrese 1 si quiere "PROBING" o 2 si quiere "CHAINING":\n'))
+        alpha = float(input('Ingrese el factor de carga que le gustaría:\n'))
+        if type_map ==1: 
+            maptyp='PROBING'
+        elif  type_map == 2: 
+            maptyp = 'CHAINING'
         print("Cargando información de los archivos ....")
-        catalog = initCatalog("ARRAY_LIST")
-        loadData(catalog)
-        print("Videos cargados:" + str(lt.size(catalog["videos"])))
+
+        cont = controller.initCatalog("ARRAY_LIST",alpha,maptyp)
+        answer = controller.loadData(cont)
+        print("Videos cargados:" + str(controller.videosSize(cont)))
+        print('Categorías cargadas: ' + str(controller.categorySize(cont)))
+
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
 
     elif int(inputs[0]) == 2:
         print("los n videos con más LIKES para el nombre de una categoría específica")
         tag = input("Etiqueta a buscar: ")
-        size = int(input("Nuemro de videos: "))
-        result = controller.getvideosbytag(catalog, tag, size)
-        for x in lt.iterator(result):
-            print( x["title"], str("Likes : "), x["likes"], str("Categoria: "), x["category_id"])
-        
+        size = int(input("Número de videos: "))
+        pais = str(input("Pais en el que desea buscar: "))
+        result = controller.getvideosbytag(cont, tag, size,pais)
        
-        
+        for x in lt.iterator(result):
+            print(str("\n"),str("Título: "), x["title"], str("Channel Title: "),x["channel_title"],str("Publish Time: "),
+            x["publish_time"], str("Likes : "), x["likes"],str("Dislikes: "),x["dislikes"], str("Categoria: "), 
+            x["category_id"], str("Trending Date"), x["trending_date"], str("Views"),x["views"])
+    
+    elif  int(inputs[0]) == 3: 
+        pass
+    elif int(inputs[0]) == 4:
+        pass
+    elif int(inputs[0]) == 5:
+        pass
 
     else:
         sys.exit(0)
