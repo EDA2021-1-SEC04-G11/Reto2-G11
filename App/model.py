@@ -50,7 +50,8 @@ def newCatalog(tipo,alpha,maptyp):
     catalog = {'videos': None,
                'category': None,
                "videostags": None,
-               "country":None
+               "country":None,
+               "vid": None
                }
     catalog['videos'] = lt.newList(tipo)
     catalog['videostags'] = mp.newMap(200,
@@ -62,6 +63,9 @@ def newCatalog(tipo,alpha,maptyp):
                                    maptype='PROBING',
                                    loadfactor=0.5)
     catalog['country'] = mp.newMap(70,
+                                   maptype='PROBING',
+                                   loadfactor=0.5)
+    catalog['vid'] = mp.newMap(70,
                                    maptype='PROBING',
                                    loadfactor=0.5)
 
@@ -98,6 +102,9 @@ def addVideo(catalog, video):
         valor=lt.newList("ARRAY_LIST")
         mp.put(catalog['videostags'], video['category_id'], valor)
     lt.addLast(valor,video)
+    addCountry(catalog,video["country"].strip(),video)
+    addvid(catalog,video["video_id"].strip(),video)
+    
 
     # Se obtiene el autor del video
 
@@ -113,12 +120,47 @@ def addid(catalog, category):
     
     mp.put(catalog['category'], category["name"], category["id"])
 
+def addCountry(catalog, country_n,video):
+    """
+    param catalog: el catálogo de videos subidos con loadData()
+    param country_n: nombre del país que se va a guardar 
+    param video: c/ video 
+    returns: Adicional por país específico
+    """
+    pays= catalog["country"]
+    moj= mp.contains(pays,country_n)
+    if moj:
+        valoactual = mp.get(pays,country_n) 
+        valor = me.getValue(valoactual)
+    else:
+        mp.put(pays,country_n,lt.newList("ARRAY_LIST"))
+        country = mp.get(pays,country_n)
+        valor= me.getValue(country)
+    lt.addLast(valor,video)
+
+def addvid(catalog,vid_n,video):
+    """
+    param catalog: el catálogo de videos subidos con loadData()
+    param vid_n: nombre del país que se va a guardar 
+    param video: c/ video 
+    returns: Adicional por país específico
+    """
+    Video_id = catalog["vid"]
+    moj= mp.contains(Video_id,vid_n)
+    if moj:
+        valoactual = mp.get(Video_id,vid_n) 
+        valor = me.getValue(valoactual)
+    else:
+        mp.put(Video_id,vid_n,lt.newList("ARRAY_LIST"))
+        videoId = mp.get(Video_id,vid_n)
+        valor= me.getValue(videoId)
+    lt.addLast(valor,video)
+
 # ==============================
 # Funciones de consulta
 # ==============================
 
 def getvideosbytag(catalog, tag, size, pais):
-
     videospais = lt.newList()
     tagg=mp.get(catalog["category"],tag) 
     taggg=me.getValue(tagg) 
@@ -133,6 +175,16 @@ def getvideosbytag(catalog, tag, size, pais):
             lt.addLast(videospais,video)
     videos = lt.subList(videospais,1,size)
     return videos
+
+def TrendingVidCountry(catalog,country):
+    valor=mp.get(catalog["country"],country) 
+
+    tema=me.getValue(valor) 
+    videos = mt.sort(tema, cmpVideosByVidId)
+    return videos
+
+def trending_days(catalog):
+    pass
     
 # Funciones de Tamaño
 
