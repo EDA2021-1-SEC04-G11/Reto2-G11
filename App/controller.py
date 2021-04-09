@@ -80,10 +80,11 @@ def loadVideo(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-5pct.csv'
+    videosfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog, videos)
+        
 
 
 
@@ -99,7 +100,13 @@ def getvideosbytag(catalog, tag, size, pais):
     una etiqueta
     """
     return model.getvideosbytag(catalog, tag, size,pais)
-   
+
+def TrendingVidCountry(catalog,pais):
+    """
+    Retorna los videos que han sido marcados con
+    una etiqueta
+    """
+    return model.TrendingVidCountry(catalog,pais)
 
 # Funciones para la carga de datos
 

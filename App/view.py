@@ -102,7 +102,14 @@ while True:
             x["category_id"], str("Trending Date"), x["trending_date"], str("Views"),x["views"])
     
     elif  int(inputs[0]) == 3: 
-        pass
+
+        pais = str(input("Pais en el que desea buscar: "))
+        result = controller.TrendingVidCountry(cont,pais)
+
+        for x in lt.iterator(result):
+            answer = {"title": x["title"],"channel title": x["channel_title"],"country": x["country"]}
+            print(answer)
+            
     elif int(inputs[0]) == 4:
         pass
     elif int(inputs[0]) == 5:
