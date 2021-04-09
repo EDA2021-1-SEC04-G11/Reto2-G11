@@ -26,9 +26,11 @@
 
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.ADT import map as mp
 
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import arraylistiterator as it 
 from DISClib.DataStructures import mapentry as me
+
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as mt
 assert cf
@@ -65,11 +67,6 @@ def newCatalog(tipo,alpha,maptyp):
     catalog['country'] = mp.newMap(70,
                                    maptype='PROBING',
                                    loadfactor=0.5)
-    catalog['vid'] = mp.newMap(70,
-                                   maptype='PROBING',
-                                   loadfactor=0.5)
-
-    
 
     return catalog
 
@@ -103,7 +100,6 @@ def addVideo(catalog, video):
         mp.put(catalog['videostags'], video['category_id'], valor)
     lt.addLast(valor,video)
     addCountry(catalog,video["country"].strip(),video)
-    addvid(catalog,video["video_id"].strip(),video)
     
 
     # Se obtiene el autor del video
@@ -156,6 +152,8 @@ def addvid(catalog,vid_n,video):
         valor= me.getValue(videoId)
     lt.addLast(valor,video)
 
+
+
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -177,15 +175,50 @@ def getvideosbytag(catalog, tag, size, pais):
     return videos
 
 def TrendingVidCountry(catalog,country):
+    """
+    Si estuviera ordenado REQ 2 
+    """
+    video_Tct = lt.newList()
+    # filtro por país 
     valor=mp.get(catalog["country"],country) 
-
     tema=me.getValue(valor) 
-    videos = mt.sort(tema, cmpVideosByVidId)
-    return videos
+    videos = mt.sort(tema,cmpfunction= cmpfunctionByVideoid) 
 
-def trending_days(catalog):
-    pass
+    value_search = trending_days(videos)
     
+    # filtro por video_id 
+    for cont in range(1,  lt.size(videos)):
+        video = lt.getElement(videos, cont)
+
+        if video["video_id"] == value_search[1]:
+            lt.addLast(video_Tct,video)
+    flt = lt.subList(video_Tct,1,1)
+    print("Dias en tendencia:",value_search[0])
+    return flt
+
+    return value_search
+
+def trending_days(videos):
+    
+    trending_d = 0 
+    video_ext = None 
+    dicc= {}
+    iterador = it.newIterator(videos)
+        
+    while it.hasNext(iterador):
+
+        pos_actual= it.next(iterador)["video_id"]
+
+        if pos_actual in dicc.keys():
+            dicc[pos_actual] +=1
+            if  dicc[pos_actual]> trending_d:
+                trending_d=  dicc[pos_actual]
+                video_ext = pos_actual
+        else:
+            dicc[pos_actual]= 1
+    return (trending_d,video_ext)
+
+
 # Funciones de Tamaño
 
 def videosSize(catalog):
@@ -217,6 +250,13 @@ def comparcategory(categ, id):
     print(id)
     return (categ == id)
 
+def cmpfunctionByVideoid(element1, element2):
+    if element1['video_id'] == element2['video_id']:
+        return 0
+    elif element1['video_id'] < element2['video_id']:
+        return -1
+    else:
+        return 1
 
 
 
