@@ -58,7 +58,8 @@ def newCatalog(tipo,alpha,maptyp):
     catalog['videos'] = lt.newList(tipo)
     catalog['videostags'] = mp.newMap(200,
                                 maptype=maptyp,
-                                loadfactor=alpha)
+                                loadfactor=alpha,
+                                comparefunction=compareTagIds)
 
     
     catalog['category'] = mp.newMap(70,
@@ -66,7 +67,8 @@ def newCatalog(tipo,alpha,maptyp):
                                    loadfactor=0.5)
     catalog['country'] = mp.newMap(70,
                                    maptype='PROBING',
-                                   loadfactor=0.5)
+                                   loadfactor=0.5,
+                                   comparefunction=compareAuthorsByName)
 
     return catalog
 
@@ -182,7 +184,7 @@ def TrendingVidCountry(catalog,country):
     # filtro por país 
     valor=mp.get(catalog["country"],country) 
     tema=me.getValue(valor) 
-    videos = mt.sort(tema,cmpfunction= cmpfunctionByVideoid) 
+    videos = mt.sort(tema,cmpfunction= cmpfunctionByVideoid)
 
     value_search = trending_days(videos)
     
@@ -250,13 +252,28 @@ def comparcategory(categ, id):
     print(id)
     return (categ == id)
 
-def cmpfunctionByVideoid(element1, element2):
-    if element1['video_id'] == element2['video_id']:
+def cmpfunctionByVideoid(video1, video2):
+    
+    return ((video1['video_id']) < (video2['video_id']))
+
+def compareAuthorsByName(keyname, author):
+    """
+    Compara dos nombres de autor. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    authentry = me.getKey(author)
+    if (keyname == authentry):
         return 0
-    elif element1['video_id'] < element2['video_id']:
-        return -1
-    else:
+    elif (keyname > authentry):
         return 1
+    else:
+        return -1
 
-
-
+def compareTagIds(id, tag):
+    tagentry = me.getKey(tag)
+    if (int(id) == int(tagentry)):
+        return 0
+    elif (int(id) > int(tagentry)):
+        return 1
+    else:
+        return 0
