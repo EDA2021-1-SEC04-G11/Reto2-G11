@@ -80,7 +80,7 @@ def loadVideo(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-5pct.csv'
+    videosfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog, videos)
@@ -116,8 +116,8 @@ def getvideosbytag(catalog, tag, size, pais):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
 
-    print("Tiempo: ",delta_time)
-    print("Memoria: ", delta_memory)
+    print("Tiempo [ms]: ",delta_time)
+    print("Memoria [kb]: ", delta_memory)
 
     return answer 
 
@@ -144,8 +144,8 @@ def TrendingVidCountry(catalog,pais):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
 
-    print("Tiempo: ",delta_time)
-    print("Memoria: ", delta_memory)
+    print("Tiempo [ms]: ",delta_time)
+    print("Memoria [kb]: ", delta_memory)
 
     return answer 
 
@@ -167,8 +167,8 @@ def gettrendingvidtag(catalog, tag):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
 
-    print("Tiempo: ",delta_time)
-    print("Memoria: ", delta_memory)
+    print("Tiempo [ms]: ",delta_time)
+    print("Memoria [kB]: ", delta_memory)
     return answer 
 
 def VideoByTagLikes(catalog,pais,size,tag):
@@ -189,8 +189,8 @@ def VideoByTagLikes(catalog,pais,size,tag):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
 
-    print("Tiempo: ",delta_time)
-    print("Memoria: ", delta_memory)
+    print("Tiempo [ms]: ",delta_time)
+    print("Memoria [kB]: ", delta_memory)
     return answer 
 # Funciones para la carga de datos
 
