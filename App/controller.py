@@ -109,6 +109,8 @@ def TrendingVidCountry(catalog,pais):
 def gettrendingvidtag(catalog, tag):
     return model.gettrendingvidtag(catalog, tag)
 
+def VideoByTagLikes(catalog,pais,size,tag):
+    return model.VideoByTagLikes(catalog, pais, int(size), str(tag))
 # Funciones para la carga de datos
 
 # Funciones de ordenamiento

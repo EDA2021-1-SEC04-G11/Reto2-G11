@@ -106,10 +106,10 @@ while True:
 
         pais = str(input("Pais en el que desea buscar: "))
         result = controller.TrendingVidCountry(cont,pais)
-
         for x in lt.iterator(result):
             answer = {"title": x["title"],"channel title": x["channel_title"],"country": x["country"]}
             print(answer)
+           
             
     elif int(inputs[0]) == 4:
         tag= input("Etiqueta a buscar: ")
@@ -118,8 +118,13 @@ while True:
 
 
     elif int(inputs[0]) == 5:
-        pass
-
+        size = input("Indique tamaño de la muestra: ")
+        tag = input("Indique el parámetro tag por el que le gustaría buscar")
+        country = input("Indique el país por el que le gustaría buscar")
+        result = controller.VideoByTagLikes(cont, country, int(size), str(tag))
+        for x in lt.iterator(result):
+            print(str("\n"),str("Título: "), x["title"], str("Channel Title: "),x["channel_title"],str("Publish Time: "),
+            x["publish_time"], str("Likes : "), x["likes"],str("Dislikes: "),x["dislikes"], str("Views:"),x["views"])
     else:
         sys.exit(0)
 sys.exit(0)

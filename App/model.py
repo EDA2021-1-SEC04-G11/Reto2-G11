@@ -162,6 +162,10 @@ def addvid(catalog,vid_n,video):
 # Funciones de consulta
 # ==============================
 
+#-------------------------------
+# REQUERIMIENTO 1
+#-------------------------------
+
 def getvideosbytag(catalog, tag, size, pais):
     videospais = lt.newList()
     tagg=mp.get(catalog["category"],tag) 
@@ -178,8 +182,11 @@ def getvideosbytag(catalog, tag, size, pais):
     videos = lt.subList(videospais,1,size)
     return videos
 
+#-------------------------------
+# REQUERIMIENTO 3
+#-------------------------------
 def gettrendingvidtag(catalog, tag):
-    videospais = lt.newList()
+    
     tagg=mp.get(catalog["category"],tag) 
     taggg=me.getValue(tagg) 
     valor=mp.get(catalog["videostags"],taggg) 
@@ -203,13 +210,9 @@ def gettrendingvidtag(catalog, tag):
                 contador=1
     print("Dias en tendecia : "+str(max))
     return (fijo)
-
-
-
-
-
-
-
+#-------------------------------
+# REQUERIMIENTO 2
+#-------------------------------
 def TrendingVidCountry(catalog,country):
     """
     Si estuviera ordenado REQ 2 
@@ -220,7 +223,6 @@ def TrendingVidCountry(catalog,country):
     tema=me.getValue(valor) 
     videos = mt.sort(tema,cmpfunction= cmpfunctionByVideoid)
     
-
     value_search = trending_days(videos)
     
     # filtro por video_id 
@@ -232,8 +234,6 @@ def TrendingVidCountry(catalog,country):
     flt = lt.subList(video_Tct,1,1)
     print("Dias en tendencia:",value_search[0])
     return flt
-
-    return value_search
 
 def trending_days(videos):
     
@@ -254,6 +254,31 @@ def trending_days(videos):
         else:
             dicc[pos_actual]= 1
     return (trending_d,video_ext)
+#-------------------------------
+# REQUERIMIENTO 4
+#-------------------------------
+def VideoByTagLikes(catalog,pais,size,tag):
+    # variables adicionales 
+    videosct = lt.newList("ARRAY_LIST")
+    # filtro por pais 
+    valor=mp.get(catalog["country"],pais) 
+    tema=me.getValue(valor) 
+    videos = mt.sort(tema,cmpfunction= cmpVideosByLikes)
+    # filtro por tag
+    iterador = it.newIterator(videos)
+
+    while it.hasNext(iterador):
+        tag_c = it.next(iterador) 
+        if (tag in str(tag_c["tags"])) == True:
+            lt.addLast(videosct, tag_c)
+    # Obtención por el size dado por el usuario 
+    final_lt = lt.subList(videosct, 1, lt.size(videosct))
+    if lt.size(videosct)< size:
+        # En caso en el que el size de la lista sea menor al size dado por el usuario
+        final_lt = lt.subList(videosct, 1, lt.size(videosct))
+    else:
+        final_lt = lt.subList(videosct, 1, size)
+    return final_lt
 
 
 # Funciones de Tamaño
