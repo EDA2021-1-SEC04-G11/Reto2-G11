@@ -80,7 +80,7 @@ def loadVideo(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-large.csv'
+    videosfile = cf.data_dir + 'videos-5pct.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog, videos)
@@ -97,20 +97,101 @@ def getvideosbytag(catalog, tag, size, pais):
     Retorna los videos que han sido marcados con
     una etiqueta
     """
-    return model.getvideosbytag(catalog, tag, size,pais)
+    # Funciones Iniciales de tiempo y memoria 
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    # Función de carga 
+
+    answer= model.getvideosbytag(catalog, tag, size,pais)
+
+    # toma de memoria 
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    print("Tiempo: ",delta_time)
+    print("Memoria: ", delta_memory)
+
+    return answer 
 
 def TrendingVidCountry(catalog,pais):
     """
     Retorna los videos que han sido marcados con
     una etiqueta
     """
-    return model.TrendingVidCountry(catalog,pais)
+    # Funciones Iniciales de tiempo y memoria 
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    # Función de carga 
+    answer= model.TrendingVidCountry(catalog,pais)
+
+    # toma de memoria 
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    print("Tiempo: ",delta_time)
+    print("Memoria: ", delta_memory)
+
+    return answer 
 
 def gettrendingvidtag(catalog, tag):
-    return model.gettrendingvidtag(catalog, tag)
+    # Funciones Iniciales de tiempo y memoria 
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    # Función de carga 
+    answer= model.gettrendingvidtag(catalog, tag)
+    # toma de memoria 
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    print("Tiempo: ",delta_time)
+    print("Memoria: ", delta_memory)
+    return answer 
 
 def VideoByTagLikes(catalog,pais,size,tag):
-    return model.VideoByTagLikes(catalog, pais, int(size), str(tag))
+    # Funciones Iniciales de tiempo y memoria 
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    # Función de carga 
+    answer= model.VideoByTagLikes(catalog, pais, int(size), str(tag))
+    # toma de memoria 
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    print("Tiempo: ",delta_time)
+    print("Memoria: ", delta_memory)
+    return answer 
 # Funciones para la carga de datos
 
 # Funciones de ordenamiento
