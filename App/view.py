@@ -114,7 +114,7 @@ while True:
     elif int(inputs[0]) == 4:
         tag= input("Etiqueta a buscar: ")
         result = controller.gettrendingvidtag(cont, tag)
-        print(result)
+        print(result["title"],result["channel_title"],result["category_id"])
 
 
     elif int(inputs[0]) == 5:

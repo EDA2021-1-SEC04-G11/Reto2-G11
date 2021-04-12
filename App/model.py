@@ -201,7 +201,7 @@ def gettrendingvidtag(catalog, tag):
                     fijo=dato1
             else :
                 contador=1
-    print(max)
+    print("Dias en tendecia : "+str(max))
     return (fijo)
 
 
