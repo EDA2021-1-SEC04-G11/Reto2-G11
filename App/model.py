@@ -69,6 +69,7 @@ def newCatalog(tipo,alpha,maptyp):
                                    maptype='PROBING',
                                    loadfactor=0.5,
                                    comparefunction=compareAuthorsByName)
+    
 
     return catalog
 
@@ -97,10 +98,11 @@ def addVideo(catalog, video):
     if moj :
         valoactual=mp.get(catalog["videostags"],video["category_id"])
         valor= me.getValue(valoactual)
+        lt.addLast(valor,video)
     else:
         valor=lt.newList("ARRAY_LIST")
         mp.put(catalog['videostags'], video['category_id'], valor)
-    lt.addLast(valor,video)
+    
     addCountry(catalog,video["country"].strip(),video)
     
 
@@ -167,7 +169,7 @@ def getvideosbytag(catalog, tag, size, pais):
     valor=mp.get(catalog["videostags"],taggg) 
 
     tema=me.getValue(valor) 
-    videos = mt.sort(tema, cmpVideosByLikes)
+    videos = mt.sort(tema, cmpVideosByViews)
     for cont in range(1,  lt.size(videos)):
         video = lt.getElement(videos, cont)
 
@@ -175,6 +177,38 @@ def getvideosbytag(catalog, tag, size, pais):
             lt.addLast(videospais,video)
     videos = lt.subList(videospais,1,size)
     return videos
+
+def gettrendingvidtag(catalog, tag):
+    videospais = lt.newList()
+    tagg=mp.get(catalog["category"],tag) 
+    taggg=me.getValue(tagg) 
+    valor=mp.get(catalog["videostags"],taggg) 
+    tema=me.getValue(valor) 
+    videos = mt.sort(tema,cmpfunction= cmpfunctionByVideoid)
+    max = 0
+    contador=1
+    for cont in range(1,  lt.size(videos)):
+        
+        if (cont+1) < (lt.size(videos)):
+            dato1 = lt.getElement(videos, cont)
+            dato2 = lt.getElement(videos, cont+1)
+
+            if dato1["video_id"] == dato2["video_id"] and dato1["video_id"] != "#NAME?":
+
+                contador+=1
+                if contador > max:
+                    max = contador
+                    fijo=dato1
+            else :
+                contador=1
+    print(max)
+    return (fijo)
+
+
+
+
+
+
 
 def TrendingVidCountry(catalog,country):
     """
@@ -185,6 +219,7 @@ def TrendingVidCountry(catalog,country):
     valor=mp.get(catalog["country"],country) 
     tema=me.getValue(valor) 
     videos = mt.sort(tema,cmpfunction= cmpfunctionByVideoid)
+    
 
     value_search = trending_days(videos)
     

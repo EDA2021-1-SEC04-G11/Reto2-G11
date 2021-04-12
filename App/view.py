@@ -103,6 +103,7 @@ while True:
     
     elif  int(inputs[0]) == 3: 
 
+
         pais = str(input("Pais en el que desea buscar: "))
         result = controller.TrendingVidCountry(cont,pais)
 
@@ -111,7 +112,11 @@ while True:
             print(answer)
             
     elif int(inputs[0]) == 4:
-        pass
+        tag= input("Etiqueta a buscar: ")
+        result = controller.gettrendingvidtag(cont, tag)
+        print(result)
+
+
     elif int(inputs[0]) == 5:
         pass
 
