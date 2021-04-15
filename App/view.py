@@ -119,8 +119,8 @@ while True:
 
     elif int(inputs[0]) == 5:
         size = input("Indique tamaño de la muestra: ")
-        tag = input("Indique el parámetro tag por el que le gustaría buscar")
-        country = input("Indique el país por el que le gustaría buscar")
+        tag = input("Indique el parámetro tag por el que le gustaría buscar: ")
+        country = input("Indique el país por el que le gustaría buscar: ")
         result = controller.VideoByTagLikes(cont, country, int(size), str(tag))
         for x in lt.iterator(result):
             print(str("\n"),str("Título: "), x["title"], str("Channel Title: "),x["channel_title"],str("Publish Time: "),
